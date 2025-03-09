@@ -1,0 +1,32 @@
+PODS:
+  - Alamofire (5.6.4)
+  - FittedSheets (2.5.3)
+  - iOSDropDown (0.4.0)
+  - IQKeyboardManagerSwift (6.5.11)
+  - SideMenuSwift (2.0.9)
+
+DEPENDENCIES:
+  - Alamofire
+  - FittedSheets
+  - iOSDropDown
+  - IQKeyboardManagerSwift
+  - SideMenuSwift (~> 2.0.0)
+
+SPEC REPOS:
+  https://cdn.cocoapods.org/:
+    - Alamofire
+    - FittedSheets
+    - iOSDropDown
+    - IQKeyboardManagerSwift
+    - SideMenuSwift
+
+SPEC CHECKSUMS:
+  Alamofire: 4e95d97098eacb88856099c4fc79b526a299e48c
+  FittedSheets: c22df4c06036515f247951fa174912e8a65c8ce4
+  iOSDropDown: ce9daa584eaa5567cafc1b633e3cc7eb6d9cea42
+  IQKeyboardManagerSwift: c7955c0bdbf7b2eb29bb7daaa44e3d90f55a9a85
+  SideMenuSwift: 39f1922e225da4aaa8b16591037a929defe960c9
+
+PODFILE CHECKSUM: eb53a13eb65b4fe1a79e25678fe3e7ad75cf27d5
+
+COCOAPODS: 1.11.3
