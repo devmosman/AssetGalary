@@ -1,9 +1,9 @@
-name: iOS Build Workflow
+name: iOS Build & Upload to TestFlight
 
 on:
   push:
     branches:
-      - main
+      - main   # Run on push to main branch
   pull_request:
     branches:
       - main
@@ -13,39 +13,73 @@ jobs:
     runs-on: macos-latest
 
     steps:
+      # 1. Checkout repository
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           path: Asset-Manager-main
 
-      - name: Debug Folder Structure
-        run: ls -R ./Asset-Manager-main
-
+      # 2. Select Xcode Version
       - name: Select Xcode Version
         run: sudo xcode-select -s /Applications/Xcode_15.0.app
 
+      # 3. Install CocoaPods dependencies
       - name: Install CocoaPods
         run: |
           sudo gem install cocoapods
-          pod install
+          pod install --repo-update
         working-directory: ./Asset-Manager-main
 
-      - name: Build the App
+      # 4. Decode and Install Distribution Certificate
+      - name: Install Distribution Certificate
         run: |
-          xcodebuild clean build \
+          echo "$P12_BASE64" | base64 --decode > certificate.p12
+
+          security create-keychain -p "" build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p "" build.keychain
+
+          security import certificate.p12 -k build.keychain -P "$P12_PASSWORD" -T /usr/bin/codesign
+
+          security set-key-partition-list -S apple-tool:,apple: -s -k "" build.keychain
+        env:
+          P12_BASE64: ${{ secrets.P12_BASE64 }}
+          P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
+
+      # 5. Install Provisioning Profile
+      - name: Install Provisioning Profile
+        run: |
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          echo "$PROVISION_PROFILE_BASE64" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/profile.mobileprovision
+        env:
+          PROVISION_PROFILE_BASE64: ${{ secrets.PROVISION_PROFILE_BASE64 }}
+
+      # 6. Archive the App
+      - name: Archive App
+        run: |
+          xcodebuild clean archive \
             -workspace "Asset Manager.xcworkspace" \
             -scheme "Asset Manager" \
-            -sdk iphonesimulator \
-            -configuration Debug
+            -configuration Release \
+            -archivePath $PWD/build/AssetManager.xcarchive \
+            -destination 'generic/platform=iOS'
         working-directory: ./Asset-Manager-main
 
+      # 7. Export IPA from Archive
+      - name: Export IPA
+        run: |
+          xcodebuild -exportArchive \
+            -archivePath $PWD/build/AssetManager.xcarchive \
+            -exportOptionsPlist ExportOptions.plist \
+            -exportPath $PWD/build
+        working-directory: ./Asset-Manager-main
 
-      # Optional Step: Run Unit Tests (if you have them)
-      # - name: Run Unit Tests
-      #   run: |
-      #     xcodebuild test \
-      #       -workspace "Asset Manager.xcworkspace" \
-      #       -scheme "Asset Manager" \
-      #       -sdk iphonesimulator \
-      #       -destination 'platform=iOS Simulator,name=iPhone 14,OS=latest'
-      #   working-directory: ./Asset-Manager-main
+      # 8. Upload to TestFlight
+      - name: Upload IPA to TestFlight
+        uses: apple-actions/upload-testflight@v1
+        with:
+          app_path: ./Asset-Manager-main/build/AssetManager.ipa
+        env:
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
+          APP_STORE_CONNECT_KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
+          APP_STORE_CONNECT_PRIVATE_KEY: ${{ secrets.APPSTORE_API_KEY_BASE64 }}
