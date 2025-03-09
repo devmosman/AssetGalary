@@ -18,14 +18,14 @@ DerivedData
 *.hmap
 *.xccheckout
 *.orig
-Pods
+#Pods
 fastlane/Archives
 fastlane/Provisining
 fastlane/README.md
 fastlane/report.xml
 
 #CocoaPods
-Pods
+#Pods
 _Prebuild
 _Prebuild_delta
 Podfile.lock
