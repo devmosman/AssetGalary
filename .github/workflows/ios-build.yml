@@ -3,33 +3,33 @@ name: iOS Build Workflow
 on:
   push:
     branches:
-      - main  # Trigger workflow on pushes to the main branch
+      - main
   pull_request:
     branches:
-      - main  # Trigger on pull requests to main branch
+      - main
 
 jobs:
   build:
-    runs-on: macos-latest  # GitHub-hosted macOS runner (paid per minute)
+    runs-on: macos-latest
 
     steps:
-      # Step 1: Checkout your repository code
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          path: Asset-Manager-main
 
-      # Step 2: Set up Xcode version
+      - name: Debug Folder Structure
+        run: ls -R ./Asset-Manager-main
+
       - name: Select Xcode Version
         run: sudo xcode-select -s /Applications/Xcode_15.0.app
-        # You can change Xcode version depending on your compatibility needs.
 
-      # Step 3: Install CocoaPods dependencies (if you use Pods)
       - name: Install CocoaPods
         run: |
-          sudo gem install cocoapods      # Make sure cocoapods is available
+          sudo gem install cocoapods
           pod install
         working-directory: ./Asset-Manager-main
 
-      # Step 4: Build the iOS App
       - name: Build the App
         run: |
           xcodebuild clean build \
@@ -38,6 +38,7 @@ jobs:
             -sdk iphonesimulator \
             -configuration Debug
         working-directory: ./Asset-Manager-main
+
 
       # Optional Step: Run Unit Tests (if you have them)
       # - name: Run Unit Tests
