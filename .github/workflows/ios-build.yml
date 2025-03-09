@@ -1,9 +1,9 @@
-name: iOS Build & Upload to TestFlight
+name: iOS Build & Upload to TestFlight (With Committed Pods)
 
 on:
   push:
     branches:
-      - main   # Run on push to main branch
+      - main
   pull_request:
     branches:
       - main
@@ -13,7 +13,7 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      # 1. Checkout repository
+      # 1. Checkout repo (with Pods folder already committed)
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
@@ -23,14 +23,7 @@ jobs:
       - name: Select Xcode Version
         run: sudo xcode-select -s /Applications/Xcode_15.0.app
 
-      # 3. Install CocoaPods dependencies
-      - name: Install CocoaPods
-        run: |
-          sudo gem install cocoapods
-          pod install --repo-update
-        working-directory: ./Asset-Manager-main
-
-      # 4. Decode and Install Distribution Certificate
+      # 3. Install Certificate and Provisioning Profile (Same as before)
       - name: Install Distribution Certificate
         run: |
           echo "$P12_BASE64" | base64 --decode > certificate.p12
@@ -46,7 +39,6 @@ jobs:
           P12_BASE64: ${{ secrets.P12_BASE64 }}
           P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
 
-      # 5. Install Provisioning Profile
       - name: Install Provisioning Profile
         run: |
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
@@ -54,7 +46,7 @@ jobs:
         env:
           PROVISION_PROFILE_BASE64: ${{ secrets.PROVISION_PROFILE_BASE64 }}
 
-      # 6. Archive the App
+      # 4. Archive the App
       - name: Archive App
         run: |
           xcodebuild clean archive \
@@ -65,7 +57,7 @@ jobs:
             -destination 'generic/platform=iOS'
         working-directory: ./Asset-Manager-main
 
-      # 7. Export IPA from Archive
+      # 5. Export IPA from Archive
       - name: Export IPA
         run: |
           xcodebuild -exportArchive \
@@ -74,7 +66,7 @@ jobs:
             -exportPath $PWD/build
         working-directory: ./Asset-Manager-main
 
-      # 8. Upload to TestFlight
+      # 6. Upload to TestFlight
       - name: Upload IPA to TestFlight
         uses: apple-actions/upload-testflight@v1
         with:
