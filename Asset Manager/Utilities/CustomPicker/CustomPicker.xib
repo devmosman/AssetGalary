@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="SST Arabic Medium.ttf">
+            <string>SSTArabic-Medium</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CustomPicker" customModule="Asset_Manager" customModuleProvider="target">
+            <connections>
+                <outlet property="doneBtn" destination="ecU-gA-f21" id="0k8-gJ-wjv"/>
+                <outlet property="picker" destination="Fn4-aE-nc4" id="k39-Rh-JCy"/>
+                <outlet property="titleLbl" destination="4uL-Ud-c9j" id="618-Mp-Bl7"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kEB-TB-wYQ">
+                    <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                    <subviews>
+                        <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Fn4-aE-nc4">
+                            <rect key="frame" x="0.0" y="55" width="414" height="676"/>
+                            <connections>
+                                <outlet property="delegate" destination="-1" id="gsv-f1-puM"/>
+                            </connections>
+                        </pickerView>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ecU-gA-f21">
+                            <rect key="frame" x="40" y="746" width="334" height="42"/>
+                            <color key="backgroundColor" name="DarkGreen"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="42" id="PF2-zx-xiS"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" name="SSTArabic-Medium" family="SST Arabic" pointSize="15"/>
+                            <state key="normal" title="Confirm">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </state>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <integer key="value" value="15"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="confirmBtnTapped:" destination="-1" eventType="touchUpInside" id="NI3-9J-ENj"/>
+                            </connections>
+                        </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4uL-Ud-c9j">
+                            <rect key="frame" x="185.5" y="15" width="43.5" height="25"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="25" id="t51-zh-hBt"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                            <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="Fn4-aE-nc4" firstAttribute="top" secondItem="4uL-Ud-c9j" secondAttribute="bottom" constant="15" id="47a-cw-nlW"/>
+                        <constraint firstAttribute="trailing" secondItem="Fn4-aE-nc4" secondAttribute="trailing" id="7YD-Hh-n9o"/>
+                        <constraint firstItem="4uL-Ud-c9j" firstAttribute="centerX" secondItem="kEB-TB-wYQ" secondAttribute="centerX" id="ArS-j9-nGn"/>
+                        <constraint firstAttribute="bottom" secondItem="ecU-gA-f21" secondAttribute="bottom" constant="30" id="BC8-ZB-4fi"/>
+                        <constraint firstAttribute="trailing" secondItem="ecU-gA-f21" secondAttribute="trailing" constant="40" id="Ky1-OJ-AMT"/>
+                        <constraint firstItem="4uL-Ud-c9j" firstAttribute="top" secondItem="kEB-TB-wYQ" secondAttribute="top" constant="15" id="Lnn-6J-ouX"/>
+                        <constraint firstItem="Fn4-aE-nc4" firstAttribute="leading" secondItem="kEB-TB-wYQ" secondAttribute="leading" id="UfX-6W-ZS3"/>
+                        <constraint firstItem="ecU-gA-f21" firstAttribute="top" secondItem="Fn4-aE-nc4" secondAttribute="bottom" constant="15" id="jul-sz-c8M"/>
+                        <constraint firstItem="ecU-gA-f21" firstAttribute="leading" secondItem="kEB-TB-wYQ" secondAttribute="leading" constant="40" id="njc-Ot-19W"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="kEB-TB-wYQ" secondAttribute="trailing" id="FHw-4v-cLq"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="kEB-TB-wYQ" secondAttribute="bottom" id="Mag-Al-8xE"/>
+                <constraint firstItem="kEB-TB-wYQ" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="Sll-1W-x7R"/>
+                <constraint firstItem="kEB-TB-wYQ" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="aTx-uv-UhJ"/>
+            </constraints>
+            <point key="canvasLocation" x="139" y="74"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="DarkGreen">
+            <color red="0.36500000953674316" green="0.67100000381469727" blue="0.66699999570846558" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>
