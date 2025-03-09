@@ -66,12 +66,4 @@ jobs:
             -exportPath $PWD/build
         working-directory: ./Asset-Manager-main
 
-      # 6. Upload to TestFlight
-      - name: Upload IPA to TestFlight
-        uses: apple-actions/upload-testflight@v1
-        with:
-          app_path: ./Asset-Manager-main/build/AssetManager.ipa
-        env:
-          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
-          APP_STORE_CONNECT_KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
-          APP_STORE_CONNECT_PRIVATE_KEY: ${{ secrets.APPSTORE_API_KEY_BASE64 }}
+
