@@ -59,11 +59,4 @@ jobs:
 
       # 5. Export IPA from Archive
       - name: Export IPA
-        run: |
-          xcodebuild -exportArchive \
-            -archivePath $PWD/build/AssetManager.xcarchive \
-            -exportOptionsPlist ExportOptions.plist \
-            -exportPath $PWD/build
-        working-directory: ./Asset-Manager-main
-
-
+        run: xcodebuild -workspace Asset\ Manager.xcworkspace -scheme Asset\ Manager -archivePath ${{ github.workspace }}/build/AssetManager.xcarchive archive -allowProvisioningUpdates
