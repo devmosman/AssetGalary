@@ -4,59 +4,32 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
   build:
     runs-on: macos-latest
 
     steps:
-      # 1. Checkout repo (with Pods folder already committed)
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          path: Asset-Manager-main
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      # 2. Select Xcode Version
-      - name: Select Xcode Version
-        run: sudo xcode-select -s /Applications/Xcode_15.0.app
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.7
 
-      # 3. Install Certificate and Provisioning Profile (Same as before)
-      - name: Install Distribution Certificate
-        run: |
-          echo "$P12_BASE64" | base64 --decode > certificate.p12
+    - name: Install CocoaPods
+      run: bundle install && bundle exec pod install
 
-          security create-keychain -p "" build.keychain
-          security default-keychain -s build.keychain
-          security unlock-keychain -p "" build.keychain
+    - name: Build and Archive
+      run: xcodebuild -workspace Asset\ Manager.xcworkspace -scheme Asset\ Manager -sdk iphoneos -configuration AppStoreDistribution archive -archivePath ${{github.workspace}}/build/Asset\ Manager.xcarchive -allowProvisioningUpdates
 
-          security import certificate.p12 -k build.keychain -P "$P12_PASSWORD" -T /usr/bin/codesign
+    - name: Export IPA
+      run: xcodebuild -exportArchive -archivePath ${{github.workspace}}/build/Asset\ Manager.xcarchive -exportOptionsPlist ExportOptions.plist -exportPath ${{github.workspace}}/build -allowProvisioningUpdates
 
-          security set-key-partition-list -S apple-tool:,apple: -s -k "" build.keychain
-        env:
-          P12_BASE64: ${{ secrets.P12_BASE64 }}
-          P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
-
-      - name: Install Provisioning Profile
-        run: |
-          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          echo "$PROVISION_PROFILE_BASE64" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/profile.mobileprovision
-        env:
-          PROVISION_PROFILE_BASE64: ${{ secrets.PROVISION_PROFILE_BASE64 }}
-
-      # 4. Archive the App
-      - name: Archive App
-        run: |
-          xcodebuild clean archive \
-            -workspace "Asset Manager.xcworkspace" \
-            -scheme "Asset Manager" \
-            -configuration Release \
-            -archivePath $PWD/build/AssetManager.xcarchive \
-            -destination 'generic/platform=iOS'
-        working-directory: ./Asset-Manager-main
-
-      # 5. Export IPA from Archive
-      - name: Export IPA
-        run: xcodebuild -workspace Asset\ Manager.xcworkspace -scheme Asset\ Manager -archivePath ${{ github.workspace }}/build/AssetManager.xcarchive archive -allowProvisioningUpdates
+    - name: Upload to TestFlight
+      env:
+        APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
+        APP_STORE_CONNECT_API_ISSUER: ${{ secrets.APP_STORE_CONNECT_API_ISSUER }}
+        APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+      run: bundle exec fastlane upload_to_testflight
