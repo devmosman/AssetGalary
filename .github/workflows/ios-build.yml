@@ -18,7 +18,9 @@ jobs:
       with:
         ruby-version: 2.7
 
-    
+    - name: Authenticate with Apple Developer Account
+      run: xcrun altool --list-providers -u ${{ secrets.APPLE_ID }} -p ${{ secrets.APP_SPECIFIC_PASSWORD }}
+
 
     - name: Build and Archive
       run: xcodebuild -workspace Asset\ Manager.xcworkspace -scheme Asset\ Manager -sdk iphoneos -configuration AppStoreDistribution archive -archivePath ${{github.workspace}}/build/Asset\ Manager.xcarchive -allowProvisioningUpdates
