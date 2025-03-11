@@ -19,7 +19,7 @@ jobs:
         ruby-version: 2.7
 
     - name: Authenticate with Apple Developer Account
-      run: xcrun altool --list-providers -u ${{ secrets.APPLE_ID }} -p ${{ secrets.APP_SPECIFIC_PASSWORD }}
+      run: xcrun altool --list-providers -u ${{secrets.APPLE_ID}} -p ${{secrets.APP_SPECIFIC_PASSWORD}}
 
 
     - name: Build and Archive
@@ -30,7 +30,7 @@ jobs:
 
     - name: Upload to TestFlight
       env:
-        APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
-        APP_STORE_CONNECT_API_ISSUER: ${{ secrets.APP_STORE_CONNECT_API_ISSUER }}
-        APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+        APP_STORE_CONNECT_API_KEY: ${{secrets.APP_STORE_CONNECT_API_KEY}}
+        APP_STORE_CONNECT_API_ISSUER: ${{secrets.APP_STORE_CONNECT_API_ISSUER}}
+        APP_STORE_CONNECT_API_KEY_ID: ${{secrets.APP_STORE_CONNECT_API_KEY_ID}}
       run: bundle exec fastlane upload_to_testflight
